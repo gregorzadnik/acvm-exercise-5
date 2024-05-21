@@ -1,0 +1,4 @@
+pytorch
+torch==2.2.1
+opencv
+got10k
