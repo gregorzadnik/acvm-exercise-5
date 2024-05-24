@@ -1,4 +1,4 @@
-from __future__ import absolute_import, division, print_function
+﻿from __future__ import absolute_import, division, print_function
 
 import torch
 import torch.nn as nn
@@ -95,8 +95,8 @@ class TrackerSiamLT(Tracker):
             'instance_sz': 255,
             'context': 0.5,
             'visibility_th': 3.5,
-            'sampling': 'gauss',
-            'num_samples': 30,
+            'sampling': 'uniform',
+            'num_samples': 10,
             'cov': 3000,
             'cov_change': 1,
             # inference parameters
