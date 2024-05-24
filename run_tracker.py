@@ -5,6 +5,7 @@ import cv2
 from tools.sequence_utils import VOTSequence
 from tools.sequence_utils import save_results
 from siamfc import TrackerSiamFC
+from siamfc import TrackerSiamLT
 
 
 def evaluate_tracker(dataset_path, network_path, results_dir, visualize):
@@ -14,7 +15,8 @@ def evaluate_tracker(dataset_path, network_path, results_dir, visualize):
         for line in f.readlines():
             sequences.append(line.strip())
 
-    tracker = TrackerSiamFC(net_path=network_path)
+    #tracker = TrackerSiamFC(net_path=network_path)
+    tracker = TrackerSiamLT(net_path=network_path)
 
     for sequence_name in sequences:
         
