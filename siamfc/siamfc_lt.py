@@ -95,10 +95,10 @@ class TrackerSiamLT(Tracker):
             'instance_sz': 255,
             'context': 0.5,
             'visibility_th': 3.5,
-            'sampling': 'uniform',
-            'num_samples': 10,
+            'sampling': 'gauss',
+            'num_samples': 20,
             'cov': 3000,
-            'cov_change': 1,
+            'cov_change': 1.1,
             # inference parameters
             'scale_num': 3,
             'scale_step': 1.0375,

@@ -1,26 +1,29 @@
 $trackerPath = "siamfc\siamfc_lt.py"
-$resultsPath = "results_samples\"
+$resultsPath = "results_threshold"
 $content = Get-Content $trackerPath -Encoding UTF8
 
 $samples = (10, 20, 30, 40, 50, 60)
+$ths = (0.5, 1, 1.5)
 $precisions = [System.Collections.ArrayList]@()
 $recalls = [System.Collections.ArrayList]@()
 $f1s = [System.Collections.ArrayList]@()
 $frames = [System.Collections.ArrayList]@()
-foreach($s in $samples){
-    $s = 10
+foreach($th in $ths){
     if(Test-Path $resultsPath){
         Get-ChildItem -Path $resultsPath -Recurse | Remove-Item -Force -Recurse
         #Remove-Item $resultsPath -Force
     }
-    Write-Host "s=$s"
-    $newRow = "            'num_samples': $s,"
-    $content[98] = $newRow
+    Write-Host "th=$th"
+    $newRow = "            'visibility_th': $th,"
+    $content[96] = $newRow
     $content | Out-File $trackerPath -Encoding utf8 -Force
-    $expr = "python run_tracker.py --dataset . --net siamfc_net.pth --results_dir results_samples"
+    $expr = "python run_tracker.py --dataset . --net siamfc_net.pth --results_dir $resultsPath"
     $f = Invoke-Expression $expr
-    $num = $f[-2].split(" ", [System.StringSplitOptions]::RemoveEmptyEntries)[3].trim()
-    $expr = "python performance_evaluation.py --dataset . --results_dir results_samples"
+    $num = "Nan"
+    if($f -is [system.array]){
+        $num = $f[-2].split(" ", [System.StringSplitOptions]::RemoveEmptyEntries)[3].trim()
+    }
+    $expr = "python performance_evaluation.py --dataset . --results_dir $resultsPath"
     $res = Invoke-Expression $expr
     $precision = [float]$res[1].split(": ", [System.StringSplitOptions]::RemoveEmptyEntries)[1].trim()
     $recall = [float]$res[2].split(": ", [System.StringSplitOptions]::RemoveEmptyEntries)[1].trim()
@@ -35,4 +38,5 @@ $samples | Write-Host
 $precisions | ForEach-Object {[math]::Round($_, 2)}
 $recalls | ForEach-Object {[math]::Round($_, 2)}
 $f1s | ForEach-Object {[math]::Round($_, 2)}
-$frames | write-host
+$ths | write-host
+$frames | Write-Host
